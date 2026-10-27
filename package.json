@@ -1,0 +1,66 @@
+{
+  "name": "web-core",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "component",
+      "asset",
+      "apps/frontend"
+    ]
+  },
+  "resolutions": {
+    "@testing-library/jest-dom": "6.9.1",
+    "@types/react": "18.3.31"
+  },
+  "scripts": {
+    "start:frontend": "yarn workspace @web-core/frontend start",
+    "build:frontend": "yarn workspace @web-core/frontend build",
+    "build:test": "yarn workspace @web-core/frontend build-test",
+    "test": "yarn workspace @web-core/component test",
+    "start:test": "yarn workspace @web-core/frontend start:test",
+    "open:cypress": "start-test start:test http://localhost:8080 '/usr/local/bin/cypress open --project /e2e/apps/frontend'",
+    "run:cypress": "start-test start:test http://localhost:8080 '/usr/local/bin/cypress run --project /e2e/apps/frontend'",
+    "eslint": "./node_modules/.bin/eslint component/src apps/frontend/src --ext .js,.ts,.tsx",
+    "format": "./node_modules/.bin/prettier --write asset/styles/**/*.{css,scss} component/{src,test}/**/*.{js,ts,tsx} apps/frontend/src/**/*.{js,ts,tsx}"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-react-app": "^7.0.1",
+    "@types/consola": "^2.2.5",
+    "@types/react": "^18.2.61",
+    "eslint-plugin-cypress": "^2.15.1",
+    "husky": "^9.0.11",
+    "start-server-and-test": "^2.0.3"
+  },
+  "dependencies": {
+    "consola": "^3.2.3",
+    "lint-staged": "^15.2.2",
+    "prettier": "^3.2.5"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "yarn run format && yarn run eslint",
+      "pre-push": "make test"
+    }
+  },
+  "lint-staged": {
+    "asset/styles/**/*.{css,scss}": [
+      "prettier --write"
+    ],
+    "component/{src,test}/**/*.{js, ts, tsx}": [
+      "prettier --write"
+    ],
+    "apps/frontend/src/**/*.{js, ts, tsx}": [
+      "prettier --write"
+    ],
+    "core/src/**/*.php": [
+      "vendor/bin/ecs check --fix"
+    ],
+    "apps/api/src/**/*.php": [
+      "vendor/bin/ecs check --fix"
+    ]
+  },
+  "prettier": {
+    "printWidth": 120
+  }
+}
